@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5">Todo App</h1>
+
+        <!-- Form to add new task -->
+        <form action="{{ url_for('add_task') }}" method="post" class="mb-3">
+            <input type="text" name="task" class="form-control" placeholder="Enter a new task" required>
+            <button type="submit" class="btn btn-primary mt-2">Add Task</button>
+        </form>
+
+        <!-- Flash messages for user notifications (e.g., task added successfully) -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- List of tasks -->
+        <ul class="list-group">
+            {% for task in todos %}
+                <li class="list-group-item">
+                    {{ task[2] }} <!-- Display task description -->
+
+                    <!-- If task is not completed, show "Complete" button -->
+                    {% if not task[3] %}
+                        <a href="{{ url_for('complete_task', task_id=task[0]) }}" 
+                           class="btn btn-success btn-sm float-right ml-2">Complete</a>
+                    {% else %}
+                        <!-- If task is completed, show "Completed" label -->
+                        <span class="badge badge-success float-right">Completed</span>
+                    {% endif %}
+
+                    <!-- Delete task button -->
+                    <a href="{{ url_for('delete_task', task_id=task[0]) }}" 
+                       class="btn btn-danger btn-sm float-right">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
